@@ -2,8 +2,10 @@
 
 # YOUR CODE HERE - GET SCRAPING
 require 'net/http'
-require 'sinatra'
+# require 'sinatra'
+require 'nokogiri'
 
-source = Net::HTTP.get('http://www.amazon.com/b?ie=UTF8&node=6187232011', '/index.html')
 
-puts source
+uri = URI('http://www.cnet.com/topics/coffee-makers/products/')
+html = Net::HTTP.get(uri)
+puts html
