@@ -8,14 +8,10 @@ require 'open-uri'
 require 'pry'
 
 
-# @coffee_makers_doc = Nokogiri::HTML(open("http://www.amazon.com/Drip-Coffee-Machines-Makers/b?ie=UTF8&node=289745", {"User-Agent"=>"Mozilla"}))
-# @urls = @coffee_makers_doc.css("span.asinReviewsSummary a").map { |link| link['href'] }
-#
-# @reviews = Array.new
-# @ratings = Array.new
+@coffee_makers_doc = Nokogiri::HTML(open("http://www.amazon.com/Drip-Coffee-Machines-Makers/b?ie=UTF8&node=289745", {"User-Agent"=>"Mozilla"}))
+@urls = @coffee_makers_doc.css("span.asinReviewsSummary a").map { |link| link['href'] }
 
 
-# @urls.each do |url|
 #   @coffee_maker_doc = Nokogiri::HTML(open(url, {"User-Agent"=>"Mozilla"}))
 #   @ratings_noko = @coffee_maker_doc.css('table#productReviews span.swSprite.s_star')
 #   i=0
@@ -37,7 +33,7 @@ end
 doc_one_page = get_noko_data(url_one_page_ratings)
 
 def get_ratings(doc)
-  ratings = Array.new
+  ratings = []
   doc.css('table#productReviews span.swSprite:first-child').each do |rating|
     ratings << rating.text.chr
   end
@@ -45,7 +41,7 @@ def get_ratings(doc)
 end
 
 def get_reviews(doc)
-  reviews = Array.new
+  reviews = []
   doc.css("div.reviewText").each do |review|
     reviews << review.text
   end
@@ -54,12 +50,16 @@ end
 
 #for ratings go through each page and each time concatinate old array to new.
 def get_next_page_url(first_page_doc)
-  first_page_doc.css('span.paging:first-of-type a:last-of-type').first
+  first_page_doc.css('span.paging:first-of-type a:last-of-type').first['href']
 end
 
-
-(puts get_next_page_url(doc_one_page))['href'] 
-
+@urls.each do |url|
+  @doc = get_noko_data(url)
+  @ratings = get_ratings(@doc)
+  @review = get_reviews(@doc)
+  #@ratings_and_reviews = Hash[@ratings.zip(@reviews)]
+  binding.pry
+end
 #go through each page and each time concatinate old array to new
 
 #@ratings_and_reviews = Hash[(@ratings.zip(@reviews)]
